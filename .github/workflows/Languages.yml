@@ -1,0 +1,26 @@
+name: Generate Languages Card
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el languages.svg
+        run: |
+          mkdir -p output
+          curl -s "https://github-readme-stats.vercel.app/api/top-langs/?username=agarcia-2024043&locale=en&hide_title=false&layout=compact&card_width=320&langs_count=5&theme=dracula&hide_border=false" -o output/languages.svg
+
+      - name: Publicar en la branch languages-output
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./output
+          publish_branch: languages-output
+          keep_files: false
