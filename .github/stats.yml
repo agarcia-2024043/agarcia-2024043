@@ -1,0 +1,26 @@
+name: Generate Stats Card
+
+on:
+  schedule:
+    - cron: "0 0 * * *"   # se actualiza cada día a medianoche UTC
+  workflow_dispatch:       # te deja correrlo manual desde la pestaña Actions
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el stats.svg
+        run: |
+          mkdir -p output
+          curl -s "https://github-readme-stats.vercel.app/api?username=agarcia-2024043&hide_title=false&hide_rank=false&show_icons=true&include_all_commits=true&count_private=true&disable_animations=false&theme=dracula&locale=en&hide_border=false" -o output/stats.svg
+
+      - name: Publicar en la branch stats-output
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./output
+          publish_branch: stats-output
+          keep_files: false
